@@ -8,6 +8,10 @@ from sklearn.metrics import classification_report
 
 
 nlp = spacy.load("en_core_web_sm")
+# nlp.Defaults.stop_words.add("my_new_stopword")
+# nlp.Defaults.stop_words |= {"my_new_stopword1","my_new_stopword2",}
+# nlp.Defaults.stop_words.remove("whatever")
+# nlp.Defaults.stop_words -= {"whatever", "whenever"}
 
 df = pd.read_csv('larger_dummy_spam_data.csv')  # Assuming you have
 
