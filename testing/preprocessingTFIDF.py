@@ -1,4 +1,6 @@
 import spacy
+import joblib
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer  # For TF-IDF model
@@ -35,7 +37,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Create a pipeline with TF-IDF vectorization and Naive Bayes classifier
 clf = Pipeline([
-    ('vectorizer_tfidf', TfidfVectorizer(ngram_range=(1, 1))),  # Using TF-IDF vectorization
+    ('vectorizer_tfidf', TfidfVectorizer(ngram_range=(1, 2))),  # Using TF-IDF vectorization
     ('Multinomial NB', MultinomialNB())
 ])
 # Train the model
@@ -47,4 +49,13 @@ y_pred = clf.predict(X_test)
 
 # Print classification report
 print(classification_report(y_test, y_pred, target_names=['Not Spam', 'Spam']))     
+
+
+# Save the model
+joblib.dump(clf, 'spam_classifier_tfidf.pkl')
+
+mj = joblib.load('spam_classifier_tfidf.pkl')
+
+mj_pred = mj.predict(X_test)
+print(classification_report(y_test, mj_pred, target_names=['Not Spam', 'Spam']))
 
