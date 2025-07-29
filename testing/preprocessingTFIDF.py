@@ -1,12 +1,13 @@
 import spacy
 import joblib
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer  # For TF-IDF model
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 nlp = spacy.load("en_core_web_sm")
@@ -49,7 +50,14 @@ y_pred = clf.predict(X_test)
 
 # Print classification report
 print(classification_report(y_test, y_pred, target_names=['Not Spam', 'Spam']))     
-
+# print(confusion_matrix(y_test, y_pred))
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Not Spam', 'Spam'], yticklabels=['Not Spam', 'Spam'])
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
 
 # Save the model
 joblib.dump(clf, 'spam_classifier_tfidf.pkl')
@@ -58,4 +66,7 @@ mj = joblib.load('spam_classifier_tfidf.pkl')
 
 mj_pred = mj.predict(X_test)
 print(classification_report(y_test, mj_pred, target_names=['Not Spam', 'Spam']))
+
+
+
 
