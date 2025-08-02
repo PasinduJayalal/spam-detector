@@ -33,7 +33,9 @@ clf = Pipeline([
 
 clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
-print(classification_report(y_test, y_pred, target_names=['Not Spam', 'Spam']))
-cm = confusion_matrix(y_test, y_pred)
-cm_df = pd.DataFrame(cm, index=['Actual: Not Spam', 'Actual: Spam'], columns=['Predicted: Not Spam', 'Predicted: Spam'])
-print(cm_df)
+print("Train Accuracy:", clf.score(X_train, y_train))
+print("Test Accuracy:", clf.score(X_test, y_test))
+# print(classification_report(y_test, y_pred, target_names=['Not Spam', 'Spam']))
+# cm = confusion_matrix(y_test, y_pred)
+# cm_df = pd.DataFrame(cm, index=['Actual: Not Spam', 'Actual: Spam'], columns=['Predicted: Not Spam', 'Predicted: Spam'])
+# print(cm_df)
