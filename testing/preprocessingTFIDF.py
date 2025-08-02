@@ -52,20 +52,25 @@ y_pred = clf.predict(X_test)
 print(classification_report(y_test, y_pred, target_names=['Not Spam', 'Spam']))     
 # print(confusion_matrix(y_test, y_pred))
 cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(6,4))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Not Spam', 'Spam'], yticklabels=['Not Spam', 'Spam'])
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.title('Confusion Matrix')
-plt.show()
+cm_df = pd.DataFrame(cm, index=['Actual: Not Spam', 'Actual: Spam'], columns=['Predicted: Not Spam', 'Predicted: Spam'])
+print(cm_df)
 
-# Save the model
-joblib.dump(clf, 'spam_classifier_tfidf.pkl')
 
-mj = joblib.load('spam_classifier_tfidf.pkl')
 
-mj_pred = mj.predict(X_test)
-print(classification_report(y_test, mj_pred, target_names=['Not Spam', 'Spam']))
+# plt.figure(figsize=(6,4))
+# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Not Spam', 'Spam'], yticklabels=['Not Spam', 'Spam'])
+# plt.xlabel('Predicted')
+# plt.ylabel('Actual')
+# plt.title('Confusion Matrix')
+# plt.show()
+
+# # Save the model
+# joblib.dump(clf, 'spam_classifier_tfidf.pkl')
+
+# mj = joblib.load('spam_classifier_tfidf.pkl')
+
+# mj_pred = mj.predict(X_test)
+# print(classification_report(y_test, mj_pred, target_names=['Not Spam', 'Spam']))
 
 
 
