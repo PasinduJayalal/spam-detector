@@ -73,6 +73,7 @@ model = {
         "model": LogisticRegression(solver="liblinear", class_weight="balanced"),
         "params": {"C": [1, 5, 10]},
     },
+    "nb": {"model": MultinomialNB(), "params": {"alpha": [0.5, 1.0]}},
 }
 
 
