@@ -1,22 +1,45 @@
 import spacy
 import re
+import pandas as pd
+import os
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn import preprocessing
 
 
+# datasets = pd.read_csv(
+#     r"D:\Professional\SpamDetector\data\SMSSpamCollection", sep="\t", header=None, names=["label", "text"]
+# )
 
-corpus = [
-    "Congratulations! You've won a $1,000 gift card. Click here to claim now.",     # spam
-    "Reminder: Your appointment is scheduled for tomorrow at 10:00 AM.",             # not spam
-    "URGENT! Your account has been compromised. Verify immediately.",                # spam
-    "Can we reschedule our meeting to next week?",                                   # not spam
-    "You have been selected for a free vacation to the Bahamas!",                    # spam
-    "Hey, just checking in — let me know if you're free to talk later.",             # not spam
-    "Win a brand new iPhone! Limited time offer — apply now!",                       # spam
-    "Monthly report is attached, please review and share feedback.",                 # not spam
-]
-labels = [1, 0, 1, 0, 1, 0, 1, 0]
+# datasets["label"] = datasets["label"].map({"ham": 0, "spam": 1})
+
+
+# text = datasets["text"].tolist()
+# labels = np.array(datasets["label"].tolist())
+
+def load_dataset(path: str):
+    
+    ext = os.path.splitext(path)[1].lower()
+    
+    if ext == ".csv":
+        df = pd.read_csv(path)
+        df["label"] = df["label"].map({"ham": 0, "spam": 1})
+        
+    elif ext in [".tsv", ".txt"] or ext == "":
+        df = pd.read_csv(path, sep="\t", header=None, names=["label", "text"])
+        df["label"] = df["label"].map({"ham": 0, "spam": 1})
+        
+    else:
+        raise ValueError("Unsupported file format. Please provide a CSV or TSV file.")
+    
+    df['text'] = df['text'].fillna('') 
+    df = df[df['text'].str.strip() != '']
+    
+    return df["text"].tolist(), np.array(df["label"]) 
+
+X_sms, y_sms = load_dataset("D:/Professional/SpamDetector/data/SMSSpamCollection")
+
 nlp = spacy.load("en_core_web_sm")
 
 def clean_text(text, lower=True, remove_urls=True, remove_emails=True, normalize_ws=True):
@@ -50,11 +73,6 @@ def clean_text_list(texts):
 def preprocess_text_list(texts):
     return [preprocess_text(t) for t in texts]
 
-# def tfidf_vectorize(corpus):
-#     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-#     X = vectorizer.fit_transform(corpus)
-#     return X, vectorizer
-
 
 TextCleanerTransformer = preprocessing.FunctionTransformer(clean_text_list, validate=False)
 SpacyPreprocessorTransformer = preprocessing.FunctionTransformer(preprocess_text_list, validate=False)
@@ -66,10 +84,10 @@ pipeline = Pipeline([
     ("tfidf_vectorizer", TfidfVectorizer(ngram_range=(1, 2),lowercase=False)),
 ])
 
-x = pipeline.fit(corpus)
+x = pipeline.fit(X_sms)
 print("Pipeline fitted successfully.",x)
 
-x = pipeline.transform(corpus)
+x = pipeline.transform(X_sms)
 print("Transformed corpus shape:", x.shape)
 
 
