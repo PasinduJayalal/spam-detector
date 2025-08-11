@@ -3,20 +3,7 @@ import re
 import pandas as pd
 import os
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import Pipeline
-from sklearn import preprocessing
 
-
-# datasets = pd.read_csv(
-#     r"D:\Professional\SpamDetector\data\SMSSpamCollection", sep="\t", header=None, names=["label", "text"]
-# )
-
-# datasets["label"] = datasets["label"].map({"ham": 0, "spam": 1})
-
-
-# text = datasets["text"].tolist()
-# labels = np.array(datasets["label"].tolist())
 
 def load_dataset(path: str):
     
@@ -38,7 +25,7 @@ def load_dataset(path: str):
     
     return df["text"].tolist(), np.array(df["label"]) 
 
-X_sms, y_sms = load_dataset("D:/Professional/SpamDetector/data/SMSSpamCollection")
+
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -73,22 +60,6 @@ def clean_text_list(texts):
 def preprocess_text_list(texts):
     return [preprocess_text(t) for t in texts]
 
-
-TextCleanerTransformer = preprocessing.FunctionTransformer(clean_text_list, validate=False)
-SpacyPreprocessorTransformer = preprocessing.FunctionTransformer(preprocess_text_list, validate=False)
-
-
-pipeline = Pipeline([
-    ("text_cleaner", TextCleanerTransformer),
-    ("spacy_preprocessor", SpacyPreprocessorTransformer),
-    ("tfidf_vectorizer", TfidfVectorizer(ngram_range=(1, 2),lowercase=False)),
-])
-
-x = pipeline.fit(X_sms)
-print("Pipeline fitted successfully.",x)
-
-x = pipeline.transform(X_sms)
-print("Transformed corpus shape:", x.shape)
 
 
 
