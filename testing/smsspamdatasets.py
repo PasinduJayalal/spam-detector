@@ -10,13 +10,18 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import MultinomialNB
 
 from sklearn.metrics import classification_report, confusion_matrix
 
 
-datasets = pd.read_csv(
-    "SMSSpamCollection", sep="\t", header=None, names=["label", "text"]
-)
+# datasets = pd.read_csv(
+#     "SMSSpamCollection", sep="\t", header=None, names=["label", "text"]
+# )
+datasets = pd.read_csv("spam2.csv", encoding="latin-1")
+datasets = datasets[['v1', 'v2']]
+
+datasets = datasets.rename(columns={'v1': 'label', 'v2': 'text'})
 
 datasets["label"] = datasets["label"].map({"ham": 0, "spam": 1})
 
@@ -62,11 +67,11 @@ converted_texts, tfidf  = tfidf_vectorize(preprocessed_texts)
 
 model = {
     "svm": {
-        "model": svm.SVC(gamma="auto"),
-        "params": {"C": [1, 10, 20], "kernel": ["rbf", "linear"]},
+        "model": svm.SVC(gamma="auto", class_weight="balanced"),
+        "params": {"C": [1, 10, 20], "kernel": ["rbf", "linear"],},
     },
     "rf": {
-        "model": RandomForestClassifier(),
+        "model": RandomForestClassifier(class_weight="balanced"),
         "params": {"n_estimators": [1, 5, 10]},
     },
     "lr": {

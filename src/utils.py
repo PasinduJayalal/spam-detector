@@ -10,16 +10,25 @@ def load_dataset(path: str):
     ext = os.path.splitext(path)[1].lower()
     
     if ext == ".csv":
-        df = pd.read_csv(path)
-        df["label"] = df["label"].map({"ham": 0, "spam": 1})
+        try:
+            df = pd.read_csv(path, encoding="utf-8")
+        except UnicodeDecodeError:
+            df = pd.read_csv(path, encoding="latin-1")
         
     elif ext in [".tsv", ".txt"] or ext == "":
         df = pd.read_csv(path, sep="\t", header=None, names=["label", "text"])
-        df["label"] = df["label"].map({"ham": 0, "spam": 1})
         
     else:
         raise ValueError("Unsupported file format. Please provide a CSV or TSV file.")
     
+    if "v1" in df.columns and "v2" in df.columns:
+        df = df.rename(columns={"v1": "label", "v2": "text"})
+    
+    if not {"label", "text"}.issubset(df.columns):
+        raise ValueError("Dataset must have 'label' and 'text' columns.")
+    
+    df = df[["label", "text"]]
+    df["label"] = df["label"].map({"ham": 0, "spam": 1})
     df['text'] = df['text'].fillna('') 
     df = df[df['text'].str.strip() != '']
     
