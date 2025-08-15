@@ -1,6 +1,6 @@
 # SMS Spam Detection — Char 3–5 TF-IDF + LinearSVC
 
-**Date:** YYYY-MM-DD HH:MM  
+**Date:** 2025-08-14   
 **Dataset:** SMSspam2.csv  
 **Vectorizer:** TfidfVectorizer(analyzer='char', ngram_range=(3,5), min_df=2, lowercase=False)  
 **Model:** LinearSVC(class_weight='balanced', C=1.0, random_state=42)
