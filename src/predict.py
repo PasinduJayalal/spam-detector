@@ -14,13 +14,13 @@ def main():
         required=True,
         help="Which model to use (sms or email)"
     )
-    parser.add_argument("--text", type=str, help="Single text to classify")
+    # parser.add_argument("--text", type=str, help="Single text to classify")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--text", type=str, help="Single text to classify")
+    group.add_argument("--file", type=str, help="Path to text file (one message per line)")
     
     args = parser.parse_args()
-    text = args.text
-    
-    if not args.text:
-        parser.error("You must provide --text")
+    # text = args.text
 
     
     if args.model == "sms":
@@ -29,9 +29,18 @@ def main():
         # model = joblib.load(model_path)
         # sms_data.append(text)
         sms = joblib.load('models/sms_pipeline.pkl')
-        sms_pred = sms.predict([text])
-        print(f"SMS: {text}")
-        print(f"Predicted: {'Spam' if sms_pred[0] == 1 else 'Not Spam'}")
+        if args.text:
+            text = args.text
+            sms_pred = sms.predict([text])
+            print(f"SMS: {text}")
+            print(f"Predicted: {'Spam' if sms_pred[0] == 1 else 'Not Spam'}")
+        elif args.file:
+            with open(args.file, 'r', encoding="utf-8") as file:
+                messages = [line.strip() for line in file if line.strip()]
+            sms_pred = sms.predict(messages)
+            for text, pred in zip(messages, sms_pred):
+                print(f"SMS: {text}")
+                print(f"Predicted: {'Spam' if pred == 1 else 'Not Spam'}")
         
         
     elif args.model == "email":
@@ -39,9 +48,19 @@ def main():
         # model = joblib.load(model_path)
         # email_data.append(text)
         email = joblib.load('models/email_pipeline.pkl')
-        email_pred = email.predict([text])
-        print(f"Email: {text}")
-        print(f"Predicted: {'Spam' if email_pred[0] == 1 else 'Not Spam'}")
+        if args.text:
+            text = args.text
+            email_pred = email.predict([text])
+            print(f"Email: {text}")
+            print(f"Predicted: {'Spam' if email_pred[0] == 1 else 'Not Spam'}")
+        elif args.file:
+            with open(args.file, 'r',  encoding="utf-8") as file:
+                messages = [line.strip() for line in file if line.strip()]
+            email_pred = email.predict(messages)
+            for text, pred in zip(messages, email_pred):
+                print(f"Email: {text}")
+                print(f"Predicted: {'Spam' if pred == 1 else 'Not Spam'}")
+        
     # while True:
     #     try:
     #         model_choice = input("Choose model to use (sms/email) or 'exit' to quit: ").strip().lower()

@@ -1,0 +1,14 @@
+Subject: Meeting Reminder
+Body: Hi team, don’t forget about our call at 10 AM tomorrow.
+
+Subject: Congratulations 🎉
+Body: You have WON $10,000! Claim your reward immediately at www.scam.com
+
+Subject: Project Update
+Body: Please review the attached report and send feedback by Friday.
+
+Subject: Urgent Account Verification
+Body: Your account has been locked. Verify here: http://phishingsite.org
+
+Subject: Dinner Plans
+Body: Are you free for dinner this weekend?
