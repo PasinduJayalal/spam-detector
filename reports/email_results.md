@@ -15,4 +15,29 @@
 ---
 
 ## Holdout Test (25% split)
+
 **Classification Report:**
+
+              precision    recall  f1-score   support
+
+    Not Spam       1.00      0.99      0.99       918
+        Spam       0.97      0.99      0.98       375
+
+    accuracy                           0.99      1293
+   macro avg       0.98      0.99      0.99      1293
+weighted avg       0.99      0.99      0.99      1293
+
+
+**Confusion Matrix:**
+
+                  Predicted: Not Spam  Predicted: Spam
+Actual: Not Spam                  907               11
+Actual: Spam                        2              373
+
+---
+
+## Observations
+- Word 1–2 n-grams gave excellent results for email spam detection.  
+- Achieved **98% F1 for spam** and **99% overall accuracy**.  
+- Very few errors: only 2 spam missed and 11 hams flagged incorrectly.  
+- Outperformed char n-grams slightly in this dataset.
