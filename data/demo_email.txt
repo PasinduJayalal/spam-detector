@@ -1,7 +1,7 @@
 Subject: Meeting Reminder
 Body: Hi team, don’t forget about our call at 10 AM tomorrow.
 
-Subject: Congratulations 🎉
+Subject: Congratulations 
 Body: You have WON $10,000! Claim your reward immediately at www.scam.com
 
 Subject: Project Update
