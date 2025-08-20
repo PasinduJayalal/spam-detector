@@ -1,4 +1,5 @@
 import joblib
+import numpy as np
 
 
 def load_sms_model():
@@ -34,3 +35,23 @@ def predict_one_with_score(model, text: str):
     label = "Spam" if margin >= 0 else "Not Spam"
 
     return label, score
+
+
+def predict_batch_with_score(model, texts: list[str]):
+    if not texts:
+        raise ValueError("Text list cannot be empty")
+    
+    results = []
+    for text in texts:
+        text_clean = text.strip()
+        if not text_clean:
+            results.append({"label": "Invalid", "score": 0.0, "text": text})
+            continue
+
+        margin = model.decision_function([text_clean])[0]
+        score = 1 / (1 + np.exp(-margin))
+        label = "Spam" if margin >= 0 else "Not Spam"
+
+        results.append({"label": label, "score": float(score), "text": text})
+        
+    return results
