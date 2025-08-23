@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 from typing import Union
 
-from api.load_model import load_all_models, get_model
+from api.load_model import load_all_models, get_model , available_models
 from api.schemas import PredictIn, PredictOut, PredictBatchOut
 from src.infer import predict_one_with_score, predict_batch_with_score
 
@@ -41,6 +41,14 @@ def health():
 @app.get("/your_world")
 def your_world():
     return {"status": "The world is yours!"}
+
+@app.get("/meta")
+def meta():
+    return {
+        "models": available_models(),
+        "max_text_len": 4000,
+        "origins": ALLOWED_ORIGINS,
+        }
 
 @app.post("/predict", response_model=Union[PredictOut, PredictBatchOut])
 def predict(payload: PredictIn):

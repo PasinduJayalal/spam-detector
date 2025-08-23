@@ -3,6 +3,9 @@ from src.infer import load_sms_model, load_email_model
 MODEL = {}
 model_types = ["sms", "email"]
 
+def available_models():
+    return list(MODEL.keys())
+
 def load_model(model_name: str):
     model_name = model_name.lower().strip()
     if model_name == "sms":
