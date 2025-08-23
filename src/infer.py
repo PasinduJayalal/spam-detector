@@ -1,14 +1,15 @@
 import joblib
 import numpy as np
 import math
+from api import config
 
 
 def load_sms_model():
-    sms = joblib.load('models/sms_pipeline.pkl')
+    sms = joblib.load(config.MODEL_SMS_PATH)
     return sms
 
 def load_email_model():
-    email = joblib.load('models/email_pipeline.pkl')
+    email = joblib.load(config.MODEL_EMAIL_PATH)
     return email
 
 def predict_one(model, text: str) -> str:
