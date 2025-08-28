@@ -7,62 +7,67 @@ interface HeaderProps {
     model: ModelName;
     onModelChange: (next: ModelName) => void;
     status: HealthStatus;
+    className?: string;
 }
 
-function Header({ header, model, onModelChange, status }: HeaderProps) {
+function HealthDot({ status }: { status: HealthStatus }) {
+    const colorClass =
+        status === "ok" ? "bg-green-500" : status === "down" ? "bg-red-500" : "bg-gray-400";
+    const label =
+        status === "ok" ? "Online" : status === "down" ? "Offline" : "Checking…";
+
+    return (
+        <span className="inline-flex items-center gap-2" aria-live="polite">
+            <span
+                className={`h-2.5 w-2.5 rounded-full ${colorClass} ${status === "loading" ? "animate-pulse" : ""
+                    }`}
+                aria-label={`API status: ${label}`}
+                title={`API status: ${label}`}
+            />
+            <span className="text-sm text-gray-600">{label}</span>
+        </span>
+    );
+}
+
+
+function Header({ header, model, onModelChange, status, className = "", }: HeaderProps) {
     function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         onModelChange(e.target.value as ModelName);
     }
 
-    const color =
-        status === "ok" ? "green" : status === "down" ? "red" : "gray";
-    const label =
-        status === "ok" ? "Online" : status === "down" ? "Offline" : "Checking…";
     return (
-        <header style={{ borderBottom: "1px solid #eee", padding: 12 }}>
-            <div
-                style={{
-                    maxWidth: 900,
-                    margin: "0 auto",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12,
-                }}
-            >
+        <header className={`sticky top-0 z-40 border-b border-gray-200 bg-white/70 backdrop-blur ${className}`}>
+            <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-3 text-center md:flex-row md:items-center md:justify-between md:text-left">
                 {/* Left: title */}
-                <h1 style={{ fontSize: 18, fontWeight: 600 }}>{header}</h1>
+                <div className="flex items-center gap-2">
+                    <span aria-hidden className="text-xl">📧</span>
+                    <h1 className="text-lg font-semibold tracking-tight">{header}</h1>
+                </div>
 
                 {/* Right: model picker + status */}
-                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-6">
                     {/* Model selector */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <label htmlFor="model">Model:</label>
-                        <select id="model" value={model} onChange={handleChange}>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="model" className="text-sm font-medium text-gray-700">
+                            Model:
+                        </label>
+                        <select
+                            id="model"
+                            value={model}
+                            onChange={handleChange}
+                            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="model-help"
+                        >
                             <option value="sms">SMS</option>
                             <option value="email">Email</option>
                         </select>
+                        <span id="model-help" className="sr-only">
+                            Choose which model to use for predictions
+                        </span>
                     </div>
 
-                    {/* Status dot + text */}
-                    <div
-                        style={{ display: "flex", alignItems: "center", gap: 8 }}
-                        aria-live="polite"
-                    >
-                        <span
-                            // tiny colored circle
-                            style={{
-                                display: "inline-block",
-                                width: 10,
-                                height: 10,
-                                borderRadius: "50%",
-                                backgroundColor: color,
-                            }}
-                            aria-label={`API status: ${label}`}
-                            title={`API status: ${label}`}
-                        />
-                        <span style={{ fontSize: 14, color: "#555" }}>{label}</span>
-                    </div>
+                    {/* Health indicator */}
+                    <HealthDot status={status} />
                 </div>
             </div>
         </header>
