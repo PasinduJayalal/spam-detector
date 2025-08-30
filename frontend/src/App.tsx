@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import PredictorForm from "./components/PredictorForm";
+import ScoreBar from './components/ScoreBar';
 
 type ModelName = "sms" | "email";
 type HealthStatus = "loading" | "ok" | "down";
@@ -100,8 +101,10 @@ function App() {
             loading={loading}
             onSubmit={handlePredict}
           />
+          
         </>
       )}
+      <ScoreBar value={0.99}/>
     </div>
   )
 }

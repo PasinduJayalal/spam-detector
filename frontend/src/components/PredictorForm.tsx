@@ -33,7 +33,7 @@ export default function PredictorForm({
 
     return (
         <form onSubmit={handleSubmit} className="mx-auto max-w-5xl p-4">
-            {/* little model note */}
+            
             <p className="mb-2 text-sm text-gray-600">
                 Model: <strong className="uppercase">{model}</strong>
             </p>
