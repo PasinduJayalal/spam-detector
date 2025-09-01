@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import PredictorForm from "./components/PredictorForm";
-import ScoreBar from './components/ScoreBar';
+import ResultPanel from './components/ResultPanel';
+
 
 type ModelName = "sms" | "email";
 type HealthStatus = "loading" | "ok" | "down";
@@ -75,7 +76,7 @@ function App() {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selectedModel, text }),
+        body: JSON.stringify({ model: selectedModel, text }),
       });
 
       const data = await res.json();
@@ -101,10 +102,9 @@ function App() {
             loading={loading}
             onSubmit={handlePredict}
           />
-          
+          <ResultPanel model={selectedModel} result={result} />
         </>
       )}
-      <ScoreBar value={0.99}/>
     </div>
   )
 }
