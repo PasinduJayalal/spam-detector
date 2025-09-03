@@ -25,6 +25,11 @@ function App() {
   //const [error, setError] = useState<string | null>(null);
 
 
+  useEffect(() => {
+    setResult(null);
+    setLoading(false);
+  }, [selectedModel]);
+
 
   useEffect(() => {
     const controller = new AbortController();
@@ -108,6 +113,7 @@ function App() {
       ) : (
         <>
           <PredictorForm
+            key ={selectedModel}
             model={selectedModel}
             maxTextLen={meta.max_text_len}
             loading={loading}
