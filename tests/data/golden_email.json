@@ -1,0 +1,34 @@
+[
+  {
+    "text": "Subject: URGENT – Your bank account is locked\nBody: Verify at http://secure-bank-login.co",
+    "expected": "spam"
+  },
+  {
+    "text": "Subject: Invoice Overdue\nBody: Pay immediately to avoid penalties. Open attachment.",
+    "expected": "spam"
+  },
+  {
+    "text": "Subject: Project Update\nBody: Attached are the meeting notes from today. Thanks!",
+    "expected": "ham"
+  },
+  {
+    "text": "Subject: Welcome to the newsletter\nBody: Thanks for subscribing. You can unsubscribe anytime.",
+    "expected": "ham"
+  },
+  {
+    "text": "Subject: Lunch?\nBody: Free around 12:30 to grab food?",
+    "expected": "ham"
+  },
+  {
+    "text": "",
+    "expected": "invalid"
+  },
+  {
+    "text": "Subject: مرحبا\nBody: كيف حالك اليوم؟",
+    "expected": "ham"
+  },
+  {
+    "text": "Subject: 今日はいい天気ですね\nBody: ピクニックに行きませんか？",
+    "expected": "ham"
+  }
+]

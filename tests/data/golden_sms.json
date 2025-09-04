@@ -1,0 +1,34 @@
+[
+  {
+    "text": "WIN a FREE iPhone!!! Click here: http://scam.com",
+    "expected": "spam"
+  },
+  {
+    "text": "You’ve won £1000 cash! Claim now: www.w1n-prize.co.uk",
+    "expected": "spam"
+  },
+  {
+    "text": "Hey, I’ll be home at 6. Want me to grab dinner?",
+    "expected": "ham"
+  },
+  {
+    "text": "Reminder: Meeting tomorrow at 10am. Don’t be late.",
+    "expected": "ham"
+  },
+  {
+    "text": "Reply STOP to unsubscribe",
+    "expected": "ham"
+  },
+  {
+    "text": "",
+    "expected": "invalid"
+  },
+  {
+    "text": "🔥🔥🔥",
+    "expected": "ham"
+  },
+  {
+    "text": "¿Vienes a las 7?",
+    "expected": "ham"
+  }
+]
