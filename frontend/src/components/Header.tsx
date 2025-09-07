@@ -38,15 +38,15 @@ function Header({ header, model, onModelChange, status, className = "", }: Heade
     return (
         <header className={`sticky top-0 z-40 border-b border-gray-200 bg-white/70 backdrop-blur ${className}`}>
             <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-3 text-center md:flex-row md:items-center md:justify-between md:text-left">
-                {/* Left: title */}
+                
                 <div className="flex items-center gap-2">
                     <span aria-hidden className="text-xl">📧</span>
                     <h1 className="text-lg font-semibold tracking-tight">{header}</h1>
                 </div>
 
-                {/* Right: model picker + status */}
+                
                 <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-6">
-                    {/* Model selector */}
+                    
                     <div className="flex items-center gap-2">
                         <label htmlFor="model" className="text-sm font-medium text-gray-700">
                             Model:
@@ -66,7 +66,7 @@ function Header({ header, model, onModelChange, status, className = "", }: Heade
                         </span>
                     </div>
 
-                    {/* Health indicator */}
+                    
                     <HealthDot status={status} />
                 </div>
             </div>
