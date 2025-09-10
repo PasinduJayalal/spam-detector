@@ -10,6 +10,11 @@ from api.schemas import PredictIn, PredictOut, PredictBatchOut
 from src.infer import predict_one_with_score, predict_batch_with_score
 
 
+import logging
+from logging.handlers import RotatingFileHandler
+import os, time
+from fastapi import Request
+
 
 app = FastAPI()
 
@@ -23,6 +28,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+os.makedirs("logs", exist_ok=True)
+
+handler  = RotatingFileHandler("logs/access.log", maxBytes=5_000_000, backupCount=5, encoding="utf-8")
+
+formatter = logging.Formatter(
+    "%(asctime)s | model=%(model)s | text=%(message)s | ip=%(ip)s | ua=%(ua)s | ms=%(ms)s"
+)
+handler.setFormatter(formatter)
+
+logger = logging.getLogger("access")
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
+logger.propagate = False
+
 
 @app.on_event("startup")
 def startup_event():
@@ -51,7 +72,8 @@ def meta():
         }
 
 @app.post("/predict", response_model=Union[PredictOut, PredictBatchOut])
-def predict(payload: PredictIn):
+def predict(payload: PredictIn, request: Request):
+    start = time.monotonic()
     try:
         model = get_model(payload.model)
     except ValueError as e:
@@ -67,7 +89,27 @@ def predict(payload: PredictIn):
     else:
         if payload.text:
             label, score = predict_one_with_score(model, payload.text)
+            ms = int((time.monotonic() - start)*1000)
+            logger.info(
+                payload.text,
+                extra=dict(
+                    model=payload.model,
+                    ip=request.client.host if request.client else "unknown",
+                    ua=request.headers.get("user-agent", ""),
+                    ms=ms,
+                ),
+            )
             return PredictOut(label=label, score=score, model=payload.model, text=payload.text)
         elif payload.texts:
             results = predict_batch_with_score(model, payload.texts)
+            ms = int((time.monotonic() - start) * 1000)
+            logger.info(
+                str(payload.texts),
+                extra=dict(
+                    model=payload.model,
+                    ip=request.client.host if request.client else "unknown",
+                    ua=request.headers.get("user-agent", ""),
+                    ms=ms,
+                ),
+            )
             return PredictBatchOut(results=[PredictOut(**res, model=payload.model) for res in results])
