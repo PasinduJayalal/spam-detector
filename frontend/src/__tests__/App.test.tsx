@@ -30,12 +30,12 @@ test('shows an error message when /meta fails', async () => {
       HttpResponse.json({ detail: 'boom' }, { status: 500 })
     ),
     http.get('http://127.0.0.1:8000/health', () =>
-      HttpResponse.json({ status: 'ok' })
+      HttpResponse.json({ status: 'down' }, { status: 503 })
     )
   )
 
   render(<App />)
 
   expect(await screen.findByText(/offline/i)).toBeInTheDocument()
-  expect(await screen.findByLabelText(/api status: offline/i)).toBeInTheDocument()
+  expect(await screen.findByLabelText(/API status: offline/i)).toBeInTheDocument()
 })

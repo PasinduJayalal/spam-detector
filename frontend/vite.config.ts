@@ -9,6 +9,7 @@ export default defineConfig({
     environment: 'jsdom',              
     setupFiles: './src/test-setup.ts',  
     css: true,
-    globals: true,                          
+    globals: true,
+    reporters: ['dot'],                          
   },
 })
