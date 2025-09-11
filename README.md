@@ -1,57 +1,101 @@
 # 📧 SMS & Email Spam Detector
 
-A machine learning project to classify **SMS** and **Email** messages as **Spam** or **Not Spam**.  
-- **ML Stack**: scikit-learn, spaCy, joblib
-- **Backend**: FastAPI, Uvicorn, Pydantic, python-dotenv
-- **Frontend**: React, TypeScript, TailwindCSS (via Vite)
+A **full-stack machine learning project** to classify SMS and Email messages as **Spam** or **Not Spam**.  
+Built with **Python (scikit-learn, spaCy, FastAPI)** on the backend and **React + TypeScript + TailwindCSS** on the frontend.
 
-This project explores preprocessing, TF-IDF feature extraction, and classification using **Linear Support Vector Machines (LinearSVC)**, then serves the models via an API and web UI.
+---
+
+## 🛠️ Tech Stack
+
+- **Python**: scikit-learn, spaCy, joblib, FastAPI, pytest
+- **Frontend**: React, TypeScript, TailwindCSS, Vite, Vitest, RTL, MSW
+- **Other**: GitHub Actions (CI), CSV datasets (Kaggle)
+
+---
+
+## 🚀 Features
+
+- **Text Preprocessing (spaCy + custom rules):**
+  - URL, email, and whitespace removal
+  - Tokenization, lemmatization, and stopword filtering
+  - Support for both SMS and Email datasets
+
+- **ML Pipelines (scikit-learn):**
+  - Word-level and character-level **TF-IDF vectorizers**
+  - Classification with **LinearSVC** (best-performing model)
+  - Tuned n-gram ranges (1–2 for words, 3–5 for chars)
+
+- **Training & Evaluation:**
+  - Stratified train/test splits
+  - Evaluation with classification reports, F1-score, confusion matrices
+  - Pipelines serialized with **joblib** for deployment
+
+- **Backend (FastAPI):**
+  - Endpoints: `/health`, `/meta`, `/predict`
+  - Pydantic models for validation
+  - Logging with client IP, user-agent, response time
+  - CORS enabled for frontend ↔ backend communication
+
+- **Frontend (React + TypeScript + TailwindCSS):**
+  - Model selector (SMS / Email)
+  - Input box for messages
+  - Predict button with loading state
+  - Results panel with spam label & probability score
+  - **ScoreBar** with color-coded spam probability
+
+- **Testing:**
+  - Backend unit tests with **pytest** (utils, pipelines, infer, API)
+  - Frontend tests with **Vitest + React Testing Library + MSW**
+  - Mocked models for fast deterministic inference
+  - GitHub Actions planned for CI
+
 
 ---
 
 ## 📂 Project Structure (Currently)
 
 ```
-├── data/ # Raw and demo datasets
-│ ├── SMSspam2.csv
-│ ├── spam_ham_dataset.csv
-│ ├── demo_sms.txt
-│ └── demo_email.txt
-│
-├── models/ # Saved trained models (ignored by Git)
-│ ├── sms_pipeline.pkl
-│ └── email_pipeline.pkl
-│
-├── reports/ # Markdown reports with results
-│ ├── sms_results.md
-│ └── email_results.md
-│
-├── src/ # Source code
+├── api/ # FastAPI backend
+│ ├── app.py
+│ ├── load_model.py
+│ ├── schemas.py
+│ ├── config.py
+│ └── ...
+├── src/ # ML training code
 │ ├── utils.py
 │ ├── pipelines.py
 │ ├── train_sms.py
 │ ├── train_email.py
+│ ├── infer.py
 │ └── predict.py
-│
-├── api/                  # FastAPI backend
-│   ├── app.py            # FastAPI app (routes, middleware)
-│   ├── schemas.py        # Pydantic models (request/response)
-│   ├── load_model.py     # Model loading and caching
-│   └── lconfig.py         # Loads settings from .env
-├── frontend/             # React + TypeScript + Tailwind app
-│   ├── src/              # Components, API helpers, types
-│   └── .env              # Frontend API URL (VITE_API_URL)
-│
-├── tests/ # Smoke & CLI tests
-│  └── smoke/
-│    ├── test_loader.py
-│    ├── test_pipelines.py
-│    └── test_predict.py
-│
-├── requirements.txt      # ML/training dependencies
-├── api/requirements.txt  # Backend dependencies
-├── .env                  # Backend settings (ignored by Git)
-└── README.md
+├── frontend/ # React + Vite frontend
+│ ├── src/
+│ │ ├── App.tsx
+│ │ ├── main.tsx
+│ │ ├── components/
+│ │ │ ├── Header.tsx
+│ │ │ ├── PredictorForm.tsx
+│ │ │ ├── ResultPanel.tsx
+│ │ │ └── ScoreBar.tsx
+│ │ └── tests/ # Vitest + RTL tests
+├── tests/ # Backend pytest unit tests
+│ ├── unit/
+│ │ ├── test_utils.py
+│ │ ├── test_pipelines_word.py
+│ │ ├── test_pipelines_char.py
+│ │ ├── test_infer.py
+│ │ └── test_api.py
+├── models/ # Serialized ML pipelines (.pkl)
+├── data/ # Datasets (CSV)
+│ ├── SMSspam2.csv
+│ ├── spam_ham_dataset.csv
+│ └── golden_sms.csv / golden_email.csv (unit test sets)
+├── reports/ # Evaluation results
+│ ├── sms_results.md
+│ └── email_results.md
+├── requirements.txt # Python dependencies
+├── README.md
+└── .gitignore
 ```
 
 ---
@@ -93,6 +137,17 @@ This project explores preprocessing, TF-IDF feature extraction, and classificati
 ```VITE_API_URL=http://127.0.0.1:8000```
 4. Run the dev server:
 ``` npm run dev```
+---
+🧪 Running Tests
+
+### Backend (pytest)
+``` pytest tests/unit -v ```
+
+### Frontend (Vitest + RTL)
+
+```cd frontend```
+```npm test```
+
 ---
 ## 📊 Datasets
 
@@ -153,13 +208,6 @@ Both include **classification reports, confusion matrices, and cross-validation 
 
 ---
 
-## ✅ Testing
-1. Install `pytest`
-``` pip install pytest```
-2. Run smoke tests:
-```pytest tests/smoke -v```
-
----
 
 ## 👨‍💻 Author
 - Pasindu Jayalal – [GitHub](https://github.com/PasinduJayalal)
