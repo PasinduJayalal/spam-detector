@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (Node 22)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run unit tests (Vitest)
+        env:
+          VITE_API_URL: http://127.0.0.1:8000
+          CI: true
+        run: npm test -- --run
+
+      - name: Build app (Vite)
+        run: npm run build
+
+      - name: Upload production build (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          if-no-files-found: warn
+
+  backend:
+  name: Backend (Python 3.12 + pytest)
+  runs-on: ubuntu-latest
+  env:
+    PYTHONPATH: ${{ github.workspace }}
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'     
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+          api/requirements.txt
+
+    - name: Show Python version 
+      run: |
+        which python
+        python --version
+        pip --version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r api/requirements.txt
+
+    - name: Run backend tests (pytest)
+      run: pytest -v
+
