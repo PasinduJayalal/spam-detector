@@ -1,0 +1,16 @@
+text,label
+"Subject: URGENT – Your bank account is locked
+Body: Verify at http://secure-bank-login.co",spam
+"Subject: Invoice Overdue
+Body: Pay immediately to avoid penalties. Open attachment.",spam
+"Subject: Project Update
+Body: Attached are the meeting notes from today. Thanks!",ham
+"Subject: Welcome to the newsletter
+Body: Thanks for subscribing. You can unsubscribe anytime.",ham
+"Subject: Lunch?
+Body: Free around 12:30 to grab food?",ham
+,ham
+"Subject: مرحبا
+Body: كيف حالك اليوم؟",ham
+"Subject: 今日はいい天気ですね
+Body: ピクニックに行きませんか？",ham

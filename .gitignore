@@ -74,3 +74,6 @@ coverage/
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
+
+# Allow small CSV fixtures for tests
+!tests/data/*.csv
