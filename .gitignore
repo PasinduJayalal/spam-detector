@@ -77,3 +77,10 @@ coverage/
 
 # Allow small CSV fixtures for tests
 !tests/data/*.csv
+
+
+# Ignore artifacts from old npm "docker" shim
+doc/
+doc-filelist.js
+doc-script.js
+doc-style.css

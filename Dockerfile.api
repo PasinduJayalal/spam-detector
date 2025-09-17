@@ -1,0 +1,37 @@
+# Small Python image
+FROM python:3.12-slim
+
+# Make Python behave nicely in containers
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Work in /app
+WORKDIR /app
+
+# copy them to DIFFERENT names inside /app
+COPY requirements.txt ./requirements.txt
+COPY api/requirements.txt ./requirements-api.txt
+
+# install both sets of deps
+RUN python -m pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install -r requirements-api.txt
+
+# Copy your backend code in
+COPY api ./api
+COPY src ./src
+
+#  Copy the trained models into the image
+COPY models/sms_pipeline.pkl ./models/sms_pipeline.pkl
+COPY models/email_pipeline.pkl ./models/email_pipeline.pkl
+
+#  Set default env so the app knows where they are 
+ENV MODEL_SMS_PATH=/app/models/sms_pipeline.pkl \
+    MODEL_EMAIL_PATH=/app/models/email_pipeline.pkl
+
+# Expose the API port
+EXPOSE 8000
+
+# Start FastAPI with Uvicorn
+CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]
