@@ -31,6 +31,11 @@ data/processed/*
 models/*
 !models/.gitkeep
 
+# Allow trained model binaries for Docker image
+!models/sms_pipeline.pkl
+!models/email_pipeline.pkl
+
+
 # Large CSV/TSV outside data/
 *.csv
 *.tsv
