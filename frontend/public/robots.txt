@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://spam-frontend-xd8p.onrender.com/sitemap.xml
